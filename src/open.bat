@@ -1,0 +1,1 @@
+luau.exe --run main.luau
