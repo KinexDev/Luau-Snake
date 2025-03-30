@@ -43,6 +43,11 @@ function vec2.new(x: number, y: number) : vec2
 	return setmetatable(b, vec2_mt) :: vec2
 end
 
+vec2.zero = vec2.new(0, 0)
+vec2.one = vec2.new(1, 1)
+vec2.up = vec2.new(0, 1)
+vec2.right = vec2.new(1, 0)
+
 export type vec2 = typeof(setmetatable({} :: { x: number, y: number}, vec2_mt))
 
 local keys = {

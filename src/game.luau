@@ -7,6 +7,7 @@ local _instance = nil
 
 -- structure for everything
 export type script = {
+    onAwake: ((self: any) -> ())?,
 	onUpdate: ((self: any, dt: number) -> ())?,
 	onDraw: ((self: any, dt: number) -> ())?
 }
@@ -21,10 +22,17 @@ function game.getScript(name: string): script?
     return scripts[name]
 end
 
-function game.run()
+function game.run(size: utils.vec2, title: string)
     local raylib = game.raylib
-    raylib.InitWindow(utils.vec2.new(600, 600), "basic window")
+    raylib.InitWindow(size, title)
     raylib.SetTargetFPS(60)
+    
+    for _, v in pairs(scripts) do
+        if v.onAwake then
+            v.onAwake(v)
+        end
+    end
+
     while not raylib.WindowShouldClose() do
         local dt: number = raylib.GetFrameTime()
 
