@@ -1,7 +1,7 @@
 --!strict
 local game = require("game")
 local utils = require("raylib-utils")
-local snake = require("snake")
+local rendering = require("rendering")
 
 export type apples = game.script & { 
     position: utils.vec2,
@@ -9,10 +9,10 @@ export type apples = game.script & {
 }
 
 local appleColor: utils.color = utils.color.new(255, 59, 48)
-local renderingInstance: snake.snake = nil
+local renderingInstance: rendering.rendering = nil
 
 local function onAwake(self: apples)
-    renderingInstance = game.getScript("snake") :: snake.snake
+    renderingInstance = game.getScript("rendering") :: rendering.rendering
 end
 
 local function onEaten(self: apples)
@@ -20,7 +20,7 @@ local function onEaten(self: apples)
 end
 
 local function onDraw(self: apples, dt: number)
-    --renderingInstance:drawObject(self.position, appleColor)
+    renderingInstance:drawObject(self.position, appleColor)
 end
 
 local script: apples = { onAwake = onAwake, onDraw = onDraw, position = utils.vec2.new(10, 6), onEaten = onEaten }

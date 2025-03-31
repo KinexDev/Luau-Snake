@@ -2,6 +2,7 @@
 local game = {}
 game.raylib = require("raylib")
 local utils = require("raylib-utils")
+game.gameRunning = true;
 
 local _instance = nil
 
@@ -12,9 +13,11 @@ export type script = {
 	onDraw: ((self: any, dt: number) -> ())?
 }
 
-local scripts : { [string]:script } = {}
+local scripts: { [string]:script } = {}
+local index: { [number]:string } = {}
 
 function game.addScript(name: string, script: script)
+    table.insert(index, name)
     scripts[name] = script
 end
 
@@ -33,20 +36,22 @@ function game.run(size: utils.vec2, title: string)
         end
     end
 
-    while not raylib.WindowShouldClose() do
+    while not raylib.WindowShouldClose() and game.gameRunning do
         local dt: number = raylib.GetFrameTime()
 
-        for _, v in pairs(scripts) do
-            if v.onUpdate then
-                v.onUpdate(v, dt)
+        for k, v in ipairs(index) do
+            local script: script = scripts[v]
+            if script.onUpdate then
+                script.onUpdate(script, dt)
             end
         end
 
         raylib.BeginDrawing()
         
-        for _, v in pairs(scripts) do
-            if v.onDraw then
-                v.onDraw(v, dt)
+        for k, v in ipairs(index) do
+            local script: script = scripts[v]
+            if script.onDraw then
+                script.onDraw(script, dt)
             end
         end
         raylib.EndDrawing()

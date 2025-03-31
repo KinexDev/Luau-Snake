@@ -1,13 +1,12 @@
 --!strict
 local game = require("game")
 
-local snake = require("snake")
+local rendering = require("rendering")
 local player = require("player")
 local apples = require("apples")
 local utils = require("raylib-utils")
 
-game.addScript("snake", snake)
+game.addScript("rendering", rendering)
 game.addScript("player", player)
-game.addScript("apples", apples)
 
 game.run(utils.vec2.new(600, 600), "rendering")
