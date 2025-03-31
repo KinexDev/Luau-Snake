@@ -1,32 +1,28 @@
 --!strict
 local game = require("game")
 local utils = require("raylib-utils")
-local apple = require("apples")
 local rendering = require("rendering")
 
-export type player = game.script & { 
-    position: utils.vec2,
-    moveSpeed: number
-}
-
 local renderingInstance: rendering.rendering = nil
-local playerColor: utils.color = utils.color.new(90, 127, 255) 
-local step: thread = nil
+
+local playerColor: utils.color = utils.color.new(90, 127, 255)
 local previousPositions: { utils.vec2 } = {}
 local previousPosition: utils.vec2 = utils.vec2.zero
 local previousDirection: utils.vec2 = utils.vec2.zero
 local direction: utils.vec2 = utils.vec2.zero
-local appleInstance: apple.apples = nil
+local playerPosition: utils.vec2 = utils.vec2.new(5, 6)
 
-local function onAwake(self: player)
-    previousPosition = self.position
+local applePosition: utils.vec2 = utils.vec2.new(10, 6)
+local appleColor: utils.color = utils.color.new(255, 59, 48)
+
+local function onAwake(self)
+    previousPosition = playerPosition
 
     for i = 0, 2 do
         table.insert(previousPositions, utils.vec2.new(previousPosition.x - i, previousPosition.y))
     end
 
     renderingInstance = game.getScript("rendering") :: rendering.rendering
-    appleInstance = game.getScript("apples") :: apple.apples
 end
 
 local function checkForCollisions(position: utils.vec2)
@@ -45,7 +41,7 @@ end
 
 local ticks: number = 0
 
-local function onUpdate(self: player, dt: number)
+local function onUpdate(self, dt: number)
     if game.raylib.IsKeyPressed(utils.keys.W) then
         if previousDirection.y == 0 then
             direction = utils.vec2.down
@@ -75,42 +71,48 @@ local function onUpdate(self: player, dt: number)
     if ticks > 0.16 then
         if direction ~= utils.vec2.zero then
             previousDirection = direction
-            self.position += direction
+            playerPosition += direction
 
-            if checkForCollisions(self.position) then
-                game.gameRunning = false    
+            if checkForCollisions(playerPosition) then
+                previousPositions = {}
+                previousPosition = utils.vec2.zero
+                previousDirection = utils.vec2.zero
+                direction = utils.vec2.zero
+                playerPosition = utils.vec2.new(5, 6)
+                applePosition = utils.vec2.new(10, 6)
+                
+                onAwake(self)  
             end
         end
 
-        if self.position ~= previousPosition then   
-            table.insert(previousPositions, 1, self.position)
+        if playerPosition ~= previousPosition then   
+            table.insert(previousPositions, 1, playerPosition)
             table.remove(previousPositions, #previousPositions)
         end
 
-        print(self.position)
-        print(appleInstance.position)
-
-        if self.position.x == appleInstance.position.x and self.position.y == appleInstance.position.y then
+        if playerPosition.x == applePosition.x and playerPosition.y == applePosition.y then
             local randomPosition: utils.vec2 = utils.vec2.new(math.random(renderingInstance.gridSizeX - 1), math.random(renderingInstance.gridSizeY - 1))
 
             while checkForCollisions(randomPosition) do
                 randomPosition = utils.vec2.new(math.random(renderingInstance.gridSizeX - 1), math.random(renderingInstance.gridSizeY - 1))
             end
             
-            appleInstance.position = randomPosition
-            table.insert(previousPositions, 1, self.position)
+            applePosition = randomPosition
+            table.insert(previousPositions, 1, playerPosition)
         end
 
         ticks = 0
     end
 end
 
-local function onDraw(self: player, dt: number)
+local function onDraw(self, dt: number)
     for _, v in pairs(previousPositions) do
         renderingInstance:drawObject(v, playerColor)
     end
+
+    renderingInstance:drawObject(applePosition, appleColor)
 end
 
-local script: player = { onAwake = onAwake, onUpdate = onUpdate, 
-    onDraw = onDraw, position = utils.vec2.new(5, 6), moveSpeed = 10}
+local script: game.script = { onAwake = onAwake, onUpdate = onUpdate, 
+    onDraw = onDraw }
 return script
