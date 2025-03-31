@@ -4,8 +4,7 @@ local utils = require("raylib-utils")
 local rendering = require("rendering")
 
 export type apples = game.script & { 
-    position: utils.vec2,
-    onEaten: (self: apples) -> ()
+    position: utils.vec2
 }
 
 local appleColor: utils.color = utils.color.new(255, 59, 48)

@@ -8,5 +8,6 @@ local utils = require("raylib-utils")
 
 game.addScript("rendering", rendering)
 game.addScript("player", player)
+game.addScript("apples", apples)
 
 game.run(utils.vec2.new(600, 600), "rendering")
