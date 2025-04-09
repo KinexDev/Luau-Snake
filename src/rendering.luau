@@ -46,4 +46,5 @@ end
 
 local script: rendering = { onDraw = onDraw, gridSizeX = 16, gridSizeY = 15,
         drawObject = drawObject }
+
 return script

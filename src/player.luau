@@ -39,36 +39,42 @@ local function checkForCollisions(position: utils.vec2)
     return false
 end
 
+local alreadyChanged: boolean = false
 local ticks: number = 0
 
 local function onUpdate(self, dt: number)
-    if game.raylib.IsKeyPressed(utils.keys.W) then
+    if game.raylib.IsKeyDown(utils.keys.W) and not alreadyChanged then
         if previousDirection.y == 0 then
             direction = utils.vec2.down
+            alreadyChanged = true
         end
     end
 
-    if game.raylib.IsKeyPressed(utils.keys.S) then
+    if game.raylib.IsKeyDown(utils.keys.S) and not alreadyChanged then
         if previousDirection.y == 0 then
             direction = utils.vec2.up
+            alreadyChanged = true
         end
     end
 
-    if game.raylib.IsKeyPressed(utils.keys.A) then
+    if game.raylib.IsKeyDown(utils.keys.A) and not alreadyChanged then
         if previousDirection.x == 0 and direction ~= utils.vec2.zero then
             direction = utils.vec2.left
+            alreadyChanged = true
         end
     end
 
-    if game.raylib.IsKeyPressed(utils.keys.D) then
+    if game.raylib.IsKeyDown(utils.keys.D) and not alreadyChanged then
         if previousDirection.x == 0 then
             direction = utils.vec2.right
+            alreadyChanged = true
         end
     end
     
     ticks += dt
 
     if ticks > 0.16 then
+        alreadyChanged = false
         if direction ~= utils.vec2.zero then
             previousDirection = direction
             playerPosition += direction
