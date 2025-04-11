@@ -5,4 +5,4 @@ self contained executables are [here](https://github.com/KinexDev/Luau-Snake/rel
 
 ![image](https://github.com/user-attachments/assets/4b9c0ddd-863d-4119-90dc-dbe3e41a68a4)
 
-this is made with [luauRuntime](https://github.com/KinexDev/LuauRuntime/tree/main), my standalone runtime for luau and my own raylib bindings for luauRuntime.
+this is made with [luna](https://github.com/KinexDev/Luna/tree/main), my standalone runtime for luau and my own raylib bindings for luna.
