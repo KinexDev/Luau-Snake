@@ -12,6 +12,9 @@ local color = {
     end
 }
 
+export type texture = {}
+export type sound = {}
+
 local vec2 = {}
 
 local vec2_mt = {}

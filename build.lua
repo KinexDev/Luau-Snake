@@ -13,7 +13,8 @@ return {
     },
     -- files that are copied over after compilation
     dependencies = {
-        "raylib-luau.dll"
+        "raylib-luau.dll",
+        "res"
     },
     buildWin = true
 }

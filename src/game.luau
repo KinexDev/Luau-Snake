@@ -9,6 +9,8 @@ local _instance = nil
 -- structure for everything
 export type script = {
     onAwake: ((self: any) -> ())?,
+    onLoad: ((self: any) -> ())?,
+    onClose: ((self: any) -> ())?,
 	onUpdate: ((self: any, dt: number) -> ())?,
 	onDraw: ((self: any, dt: number) -> ())?
 }
@@ -29,10 +31,17 @@ function game.run(size: utils.vec2, title: string)
     local raylib = game.raylib
     raylib.InitWindow(size, title)
     raylib.SetTargetFPS(60)
+    raylib.InitAudioDevice()
     
     for _, v in pairs(scripts) do
         if v.onAwake then
             v.onAwake(v)
+        end
+    end
+
+    for _, v in pairs(scripts) do
+        if v.onLoad then
+            v.onLoad(v)
         end
     end
 
@@ -57,6 +66,13 @@ function game.run(size: utils.vec2, title: string)
         raylib.EndDrawing()
     end
 
+    for _, v in pairs(scripts) do
+        if v.onClose then
+            v.onClose(v)
+        end
+    end
+
+    raylib.CloseAudioDevice()
     raylib.CloseWindow()
 end
 
