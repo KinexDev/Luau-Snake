@@ -16,5 +16,5 @@ return {
         "raylib-luau.dll",
         "res"
     },
-    buildWin = true
+    noConsole = true
 }

@@ -1,4 +1,6 @@
 --!strict
+local rendering = {}
+
 local game = require("game")
 local utils = require("raylib-utils")
 
@@ -44,7 +46,15 @@ local function drawObject(self: rendering, pos: utils.vec2, color: utils.color)
         utils.vec2.new(scale, scale), color)
 end
 
-local script: rendering = { onDraw = onDraw, gridSizeX = 16, gridSizeY = 15,
-        drawObject = drawObject }
 
-return script
+
+function rendering.new(gridX: number, gridY: number): rendering
+    return {
+        onDraw = onDraw, 
+        gridSizeX = gridX, 
+        gridSizeY = gridY,
+        drawObject = drawObject
+    }
+end
+
+return rendering

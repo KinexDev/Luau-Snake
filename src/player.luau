@@ -1,4 +1,6 @@
 --!strict
+local player = {}
+
 local game = require("game")
 local utils = require("raylib-utils")
 local rendering = require("rendering")
@@ -69,61 +71,76 @@ local function checkForCollisions(position: utils.vec2)
     return false
 end
 
-local alreadyChanged: boolean = false
 local ticks: number = 0
+
+local previousInstruction: number = 0
 
 local function onUpdate(self, dt: number)
     if isDead then
         if game.raylib.IsKeyPressed(utils.keys.R) then
+            previousInstruction = 0
             isDead = false
             onAwake(self)
         end
         return
     end
-    if game.raylib.IsKeyPressed(utils.keys.W) and not alreadyChanged then
+
+    if game.raylib.IsKeyDown(utils.keys.W) then
         if previousDirection.y == 0 then
-            direction = utils.vec2.down
-            alreadyChanged = true
-            
-            game.raylib.SetSoundPitch(move, 1.15)
-            game.raylib.PlaySound(move)
+            previousInstruction = utils.keys.W
         end
     end
 
-    if game.raylib.IsKeyPressed(utils.keys.S) and not alreadyChanged then
+    if game.raylib.IsKeyDown(utils.keys.S) then
         if previousDirection.y == 0 then
-            direction = utils.vec2.up
-            alreadyChanged = true
-            
-            game.raylib.SetSoundPitch(move, 0.75)
-            game.raylib.PlaySound(move)
+            previousInstruction = utils.keys.S
         end
     end
 
-    if game.raylib.IsKeyPressed(utils.keys.A) and not alreadyChanged then
+    if game.raylib.IsKeyDown(utils.keys.A) then
         if previousDirection.x == 0 and direction ~= utils.vec2.zero then
-            direction = utils.vec2.left
-            alreadyChanged = true
-            
-            game.raylib.SetSoundPitch(move, 1.25)
-            game.raylib.PlaySound(move)
+            previousInstruction = utils.keys.A
         end
     end
 
-    if game.raylib.IsKeyPressed(utils.keys.D) and not alreadyChanged then
+    if game.raylib.IsKeyDown(utils.keys.D) then
         if previousDirection.x == 0 then
-            direction = utils.vec2.right
-            alreadyChanged = true
-
-            game.raylib.SetSoundPitch(move, 0.95)
-            game.raylib.PlaySound(move)
+            previousInstruction = utils.keys.D
         end
     end
     
     ticks += dt
 
-    if ticks > 0.16 then
-        alreadyChanged = false
+    if ticks > 0.16 then       
+        if previousInstruction == utils.keys.W then
+            direction = utils.vec2.down
+            
+            game.raylib.SetSoundPitch(move, 1.15)
+            game.raylib.PlaySound(move) 
+        end
+        if previousInstruction == utils.keys.S then
+            direction = utils.vec2.up
+            
+            game.raylib.SetSoundPitch(move, 0.75)
+            game.raylib.PlaySound(move)
+        end
+        
+        if previousInstruction == utils.keys.A then
+            direction = utils.vec2.left
+            
+            game.raylib.SetSoundPitch(move, 1.25)
+            game.raylib.PlaySound(move)
+        end
+
+        if previousInstruction == utils.keys.D then
+            direction = utils.vec2.right
+
+            game.raylib.SetSoundPitch(move, 0.95)
+            game.raylib.PlaySound(move)       
+        end
+
+        previousInstruction = 0
+
         if direction ~= utils.vec2.zero then
             previousDirection = direction
 
@@ -173,6 +190,15 @@ local function onDraw(self, dt: number)
     end
 end
 
-local script: game.script = { onAwake = onAwake, onUpdate = onUpdate, 
-    onDraw = onDraw, onLoad = onLoad, onClose = onClose }
-return script
+
+function player.new(): game.script
+    return {
+        onAwake = onAwake, 
+        onUpdate = onUpdate, 
+        onDraw = onDraw, 
+        onLoad = onLoad, 
+        onClose = onClose 
+    }
+end
+
+return player
