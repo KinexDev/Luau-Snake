@@ -1,7 +1,7 @@
 # Luau-Snake
 Snake game written completely in luau using luau raylib bindings
 
-self contained executables are [here](https://github.com/KinexDev/Luau-Snake/releases/tag/Release2)
+self contained executables are [here](https://github.com/KinexDev/Luau-Snake/releases/tag/Release3)
 
 ![image](https://github.com/user-attachments/assets/8cb8d47e-befd-4372-88cd-f9732ba5ef42)
 
